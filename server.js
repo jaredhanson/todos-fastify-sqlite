@@ -1,6 +1,12 @@
 // Require the framework and instantiate it
 const fastify = require('fastify')({ logger: true })
 
+fastify.register(require('point-of-view'), {
+  engine: {
+    ejs: require('ejs'),
+  },
+})
+
 // Declare a route
 fastify.register(require('./routes/index'))
 
