@@ -1,5 +1,10 @@
 // Require the framework and instantiate it
 const fastify = require('fastify')({ logger: true })
+const path = require('path')
+
+fastify.register(require('fastify-static'), {
+  root: path.join(__dirname, 'public')
+})
 
 fastify.register(require('point-of-view'), {
   engine: {
