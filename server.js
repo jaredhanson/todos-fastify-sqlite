@@ -12,6 +12,8 @@ fastify.register(require('point-of-view'), {
   },
 })
 
+fastify.register(require('./db'))
+
 // Declare a route
 fastify.register(require('./routes/index'))
 
