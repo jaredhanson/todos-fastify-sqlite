@@ -43,6 +43,32 @@ async function routes (fastify, options) {
       reply.redirect(`/${request.body.filter || ''}`)
     })
   })
+  
+  fastify.post('/:id(\\d+)', (request, reply) => {
+    if (request.body.title !== '') {
+      db.run('UPDATE todos SET title = ?, completed = ? WHERE rowid = ?', [
+        request.body.title,
+        request.body.completed !== undefined ? 1 : null,
+        request.params.id
+      ], function(err) {
+        if (err) {
+          reply.send(err)
+          return
+        }
+        reply.redirect(`/${request.body.filter || ''}`)
+      })
+    } else {
+      db.run('DELETE FROM todos WHERE rowid = ?', [
+        request.params.id
+      ], function(err) {
+        if (err) {
+          reply.send(err)
+          return
+        }
+        reply.redirect(`/${request.body.filter || ''}`)
+      })
+    }
+  })
 }
 
 module.exports = routes
