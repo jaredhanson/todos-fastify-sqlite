@@ -45,16 +45,20 @@ async function routes (fastify, options) {
   })
   
   fastify.post('/', { preValidation: trimTitle }, (request, reply) => {
-    db.run('INSERT INTO todos (title, completed) VALUES (?, ?)', [
-      request.body.title,
-      request.body.completed == true ? 1 : null
-    ], err => {
-      if (err) {
-        reply.send(err)
-        return
-      }
+    if (request.body.title !== '') {
+      db.run('INSERT INTO todos (title, completed) VALUES (?, ?)', [
+        request.body.title,
+        request.body.completed == true ? 1 : null
+      ], err => {
+        if (err) {
+          reply.send(err)
+          return
+        }
+        reply.redirect(`/${request.body.filter || ''}`)
+      })
+    } else {
       reply.redirect(`/${request.body.filter || ''}`)
-    })
+    }
   })
   
   fastify.post('/:id(\\d+)', { preValidation: trimTitle }, (request, reply) => {
