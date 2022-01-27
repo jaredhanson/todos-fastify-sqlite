@@ -78,6 +78,18 @@ async function routes (fastify, options) {
       })
     }
   })
+  
+  fastify.post('/:id(\\d+)/delete', (request, reply) => {
+    db.run('DELETE FROM todos WHERE rowid = ?', [
+      request.params.id
+    ], function(err) {
+      if (err) {
+        reply.send(err)
+        return
+      }
+      reply.redirect(`/${request.body.filter || ''}`)
+    });
+  })
 }
 
 module.exports = routes
