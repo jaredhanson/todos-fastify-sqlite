@@ -10,6 +10,9 @@ fastify.register(require('point-of-view'), {
   engine: {
     ejs: require('ejs'),
   },
+  defaultContext: {
+    pluralize: require('pluralize')
+  }
 })
 
 fastify.register(require('./db'))

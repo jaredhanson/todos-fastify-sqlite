@@ -19,8 +19,7 @@ async function routes (fastify, options) {
       reply.locals = {
         todos: todos,
         activeCount: activeCount,
-        completedCount: completedCount,
-        pluralize: require('pluralize')
+        completedCount: completedCount
       }
       done()
     });
