@@ -1,4 +1,3 @@
-// Require the framework and instantiate it
 const fastify = require('fastify')({ logger: true })
 const path = require('path')
 
@@ -17,10 +16,8 @@ fastify.register(require('point-of-view'), {
 
 fastify.register(require('./db'))
 
-// Declare a route
 fastify.register(require('./routes/index'))
 
-// Run the server!
 fastify.listen(3000, (err) => {
   if (err) {
     fastify.log.error(err)

@@ -25,7 +25,6 @@ async function routes (fastify, options) {
     })
   }
   
-  
   fastify.get('/', { preHandler: fetchTodos }, (request, reply) => {
     reply.view('/templates/index.ejs', { filter: null })
   })
