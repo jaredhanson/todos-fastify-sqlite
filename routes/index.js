@@ -90,6 +90,18 @@ async function routes (fastify, options) {
       reply.redirect(`/${request.body.filter || ''}`)
     });
   })
+  
+  fastify.post('/toggle-all', (request, reply) => {
+    db.run('UPDATE todos SET completed = ?', [
+      request.body.completed !== undefined ? 1 : null
+    ], function(err) {
+      if (err) {
+        reply.send(err)
+        return
+      }
+      reply.redirect(`/${request.body.filter || ''}`)
+    });
+  })
 }
 
 module.exports = routes
