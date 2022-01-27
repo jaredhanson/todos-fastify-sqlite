@@ -30,6 +30,16 @@ async function routes (fastify, options) {
     reply.view('/templates/index.ejs', { filter: null })
   })
   
+  fastify.get('/active', { preHandler: fetchTodos }, (request, reply) => {
+    reply.locals.todos = reply.locals.todos.filter(todo => !todo.completed)
+    reply.view('/templates/index.ejs', { filter: 'active' })
+  })
+  
+  fastify.get('/completed', { preHandler: fetchTodos }, (request, reply) => {
+    reply.locals.todos = reply.locals.todos.filter(todo => todo.completed)
+    reply.view('/templates/index.ejs', { filter: 'completed' })
+  })
+  
   fastify.post('/', (request, reply) => {
     db.run('INSERT INTO todos (title, completed) VALUES (?, ?)', [
       request.body.title,
