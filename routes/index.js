@@ -1,11 +1,11 @@
 async function routes (fastify, options) {
-  var db = fastify.sqlite.db
+  const db = fastify.sqlite.db
   
   function fetchTodos(request, reply, done) {
     db.all('SELECT rowid AS id, * FROM todos', [], function(err, rows) {
-      if (err) { return next(err); }
+      if (err) { return done(err); }
     
-      var todos = rows.map(row => {
+      const todos = rows.map(row => {
         return {
           id: row.id,
           title: row.title,
@@ -13,8 +13,8 @@ async function routes (fastify, options) {
           url: '/' + row.id
         }
       })
-      var activeCount = todos.filter(function(todo) { return !todo.completed; }).length
-      var completedCount = todos.length - activeCount
+      const activeCount = todos.filter(todo => !todo.completed).length
+      const completedCount = todos.length - activeCount
       
       reply.locals = {
         todos: todos,
@@ -22,7 +22,7 @@ async function routes (fastify, options) {
         completedCount: completedCount,
         pluralize: require('pluralize')
       }
-      done();
+      done()
     });
   }
   
