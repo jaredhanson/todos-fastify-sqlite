@@ -88,7 +88,7 @@ async function routes (fastify, options) {
         return
       }
       reply.redirect(`/${request.body.filter || ''}`)
-    });
+    })
   })
   
   fastify.post('/toggle-all', (request, reply) => {
@@ -100,7 +100,19 @@ async function routes (fastify, options) {
         return
       }
       reply.redirect(`/${request.body.filter || ''}`)
-    });
+    })
+  })
+  
+  fastify.post('/clear-completed', (request, reply) => {
+    db.run('DELETE FROM todos WHERE completed = ?', [
+      1
+    ], function(err) {
+      if (err) {
+        reply.send(err)
+        return
+      }
+      reply.redirect(`/${request.body.filter || ''}`)
+    })
   })
 }
 
