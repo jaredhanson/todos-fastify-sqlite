@@ -1,6 +1,11 @@
 async function routes (fastify, options) {
   const db = fastify.sqlite.db
   
+  function trimTitle(request, repy, done) {
+    request.body.title = request.body.title.trim()
+    done()
+  }
+  
   function fetchTodos(request, reply, done) {
     db.all('SELECT rowid AS id, * FROM todos', [], (err, rows) => {
       if (err) { return done(err) }
@@ -39,7 +44,7 @@ async function routes (fastify, options) {
     reply.view('/templates/index.ejs', { filter: 'completed' })
   })
   
-  fastify.post('/', (request, reply) => {
+  fastify.post('/', { preValidation: trimTitle }, (request, reply) => {
     db.run('INSERT INTO todos (title, completed) VALUES (?, ?)', [
       request.body.title,
       request.body.completed == true ? 1 : null
@@ -52,7 +57,7 @@ async function routes (fastify, options) {
     })
   })
   
-  fastify.post('/:id(\\d+)', (request, reply) => {
+  fastify.post('/:id(\\d+)', { preValidation: trimTitle }, (request, reply) => {
     if (request.body.title !== '') {
       db.run('UPDATE todos SET title = ?, completed = ? WHERE rowid = ?', [
         request.body.title,
