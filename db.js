@@ -3,9 +3,9 @@ const sqlite3 = require('sqlite3')
 const mkdirp = require('mkdirp')
 
 async function dbConnector (fastify, options) {
-  mkdirp.sync('var/db');
+  mkdirp.sync('./var/db');
   
-  var db = new sqlite3.Database('var/db/todos.db');
+  var db = new sqlite3.Database('./var/db/todos.db');
   
   db.serialize(function() {
     db.run("CREATE TABLE IF NOT EXISTS todos ( \
