@@ -7,7 +7,7 @@ async function routes (fastify, options) {
   }
   
   function fetchTodos(request, reply, done) {
-    db.all('SELECT rowid AS id, * FROM todos', [], (err, rows) => {
+    db.all('SELECT * FROM todos', [], (err, rows) => {
       if (err) { return done(err) }
     
       const todos = rows.map(row => {
@@ -63,7 +63,7 @@ async function routes (fastify, options) {
   
   fastify.post('/:id(\\d+)', { preValidation: trimTitle }, (request, reply) => {
     if (request.body.title !== '') {
-      db.run('UPDATE todos SET title = ?, completed = ? WHERE rowid = ?', [
+      db.run('UPDATE todos SET title = ?, completed = ? WHERE id = ?', [
         request.body.title,
         request.body.completed !== undefined ? 1 : null,
         request.params.id
@@ -75,7 +75,7 @@ async function routes (fastify, options) {
         reply.redirect(`/${request.body.filter || ''}`)
       })
     } else {
-      db.run('DELETE FROM todos WHERE rowid = ?', [
+      db.run('DELETE FROM todos WHERE id = ?', [
         request.params.id
       ], err => {
         if (err) {
@@ -88,7 +88,7 @@ async function routes (fastify, options) {
   })
   
   fastify.post('/:id(\\d+)/delete', (request, reply) => {
-    db.run('DELETE FROM todos WHERE rowid = ?', [
+    db.run('DELETE FROM todos WHERE id = ?', [
       request.params.id
     ], err => {
       if (err) {
